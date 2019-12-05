@@ -5,7 +5,7 @@
   "scripts": {
     "server": "nodemon index.js"
   },
-  "repository": "https://github.com/LambdaSchool/webauth-i-challenge.git",
+  "repository": "https://github.com/milano12345/webauth-i-challenge",
   "author": "milano12345 <dmilano857@gmail.com>",
   "license": "MIT",
   "devDependencies": {
