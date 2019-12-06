@@ -2,6 +2,7 @@ const db = require("../knexConfig");
 
 module.exports = {
   find,
+  findBy,
   findById,
   add,
   update,
@@ -10,6 +11,10 @@ module.exports = {
 
 function find() {
   return db("users");
+}
+
+function findBy(username) {
+  return db("users").where({ username });
 }
 
 function findById(id) {

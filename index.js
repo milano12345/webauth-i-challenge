@@ -39,7 +39,19 @@ server.post("/api/register", (req, res) => {
 });
 
 server.post("/api/login", (req, res) => {
-  res.status(200).json({ message: "Server is alive!" });
+  dataBase
+    .findBy(req.body.username)
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(req.body.password, user.password)) {
+        res.status(200).json({ message: "The gate is unlocked" });
+      } else {
+        res.status(401).json({ message: "Invalid Credentials" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Unexpected error" });
+    });
 });
 
 server.get("/api/users", (req, res) => {
