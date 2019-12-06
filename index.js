@@ -1,3 +1,9 @@
+///IMPORTS///
+const bcrypt = require("bcryptjs");
+const dataBase = require("./knex/models/register");
+
+///SERVER///
+
 const express = require("express");
 
 const server = express();
@@ -14,8 +20,22 @@ server.listen(port, () => {
   console.log(`=== Server listening on port ${port} ===`);
 });
 
-server.get("/api/register", (req, res) => {
-  res.status(200).json({ message: "Server is alive!" });
+///ENDPOINTS ///
+server.post("/api/register", (req, res) => {
+  const credentials = req.body;
+  const hash = bcrypt.hashSync(credentials.password, 14);
+  credentials.password = hash;
+  dataBase
+    .add(req.body)
+    .then(hub => {
+      res.status(201).json(hub);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        message: "Error adding the hub"
+      });
+    });
 });
 
 server.post("/api/login", (req, res) => {
@@ -23,5 +43,17 @@ server.post("/api/login", (req, res) => {
 });
 
 server.get("/api/users", (req, res) => {
-  res.status(200).json({ message: "Server is alive!" });
+  dataBase
+    .find(req.query)
+    .then(hubs => {
+      res.status(200).send(hubs);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        message: "User information could not be retreived"
+      });
+    });
 });
+
+///
